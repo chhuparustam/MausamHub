@@ -2,11 +2,11 @@
 function updateDateTime() {
     const now = new Date();
     
-    // Format date: "Monday, November 16, 2025"
+    // Format date
     const dateOptions = { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' };
     const dateStr = now.toLocaleDateString('en-US', dateOptions);
     
-    // Format time: "14:30:45"
+    // Format time
     const timeStr = now.toLocaleTimeString('en-US', { 
         hour: '2-digit', 
         minute: '2-digit',
@@ -206,7 +206,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }, 500);
     
     // Animate cards on load
-    const allCards = document.querySelectorAll('.glass-effect, .hour-item, .week-item, .city-item-3d');
+    const allCards = document.querySelectorAll('.glass-effect, .hourly-item, .forecast-item, .city-card');
     allCards.forEach((card, index) => {
         card.style.opacity = '0';
         card.style.transform = 'translateY(30px)';
@@ -215,29 +215,7 @@ document.addEventListener("DOMContentLoaded", () => {
             card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
             card.style.opacity = '1';
             card.style.transform = 'translateY(0)';
-        }, 100 * index);
-    });
-    
-    // 3D tilt effect for city cards
-    const cityCards = document.querySelectorAll('.city-item-3d');
-    cityCards.forEach(card => {
-        card.addEventListener('mousemove', function(e) {
-            const rect = card.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-            
-            const centerX = rect.width / 2;
-            const centerY = rect.height / 2;
-            
-            const rotateX = (y - centerY) / 10;
-            const rotateY = (centerX - x) / 10;
-            
-            card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-8px)`;
-        });
-        
-        card.addEventListener('mouseleave', function() {
-            card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) translateY(0)';
-        });
+        }, 50 * index);
     });
     
     // Parallax effect for particles
@@ -247,7 +225,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const mouseY = e.clientY / window.innerHeight;
         
         particles.forEach((particle, index) => {
-            const speed = (index + 1) * 20;
+            const speed = (index + 1) * 15;
             const x = mouseX * speed;
             const y = mouseY * speed;
             
@@ -256,7 +234,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
     
     // Smooth scroll for hourly items
-    const hourlyContainer = document.querySelector('.hourly-container');
+    const hourlyContainer = document.querySelector('.hourly-scroll');
     if (hourlyContainer) {
         hourlyContainer.style.scrollBehavior = 'smooth';
     }
@@ -272,41 +250,4 @@ document.addEventListener("DOMContentLoaded", () => {
             }, 500);
         });
     }
-    
-    // Add pulse animation to search button
-    const searchBtn = document.querySelector('.search-btn');
-    if (searchBtn) {
-        setInterval(() => {
-            searchBtn.style.animation = 'pulse 1s ease';
-            setTimeout(() => {
-                searchBtn.style.animation = '';
-            }, 1000);
-        }, 5000);
-    }
-    
-    // Weather icon floating animation enhancement
-    const weatherIcon = document.querySelector('.weather-3d-icon');
-    if (weatherIcon) {
-        let rotation = 0;
-        setInterval(() => {
-            rotation += 0.5;
-            weatherIcon.style.transform = `rotate(${Math.sin(rotation / 10) * 5}deg)`;
-        }, 50);
-    }
 });
-
-// Add pulse animation to CSS dynamically
-const style = document.createElement('style');
-style.textContent = `
-    @keyframes pulse {
-        0%, 100% {
-            transform: scale(1);
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
-        }
-        50% {
-            transform: scale(1.1);
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.8);
-        }
-    }
-`;
-document.head.appendChild(style);

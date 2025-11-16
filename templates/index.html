@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Weather Pro Dashboard</title>
+    <title>WeatherHub</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -25,7 +25,7 @@
             <div class="nav-left">
                 <div class="logo-container">
                     <i class="fas fa-cloud-sun-rain logo-icon"></i>
-                    <span class="logo-text">WeatherPro</span>
+                    <span class="logo-text">WeatherHub</span>
                 </div>
             </div>
             <div class="nav-center">
@@ -53,165 +53,143 @@
         {% endif %}
 
         {% if weather %}
-        <!-- Main Content -->
-        <div class="content-wrapper">
-            <!-- Hero Weather Card -->
-            <section class="hero-weather glass-effect">
-                <div class="hero-left">
-                    <div class="location-badge">
-                        <i class="fas fa-location-dot"></i>
-                        <span>{{ weather.city }}, {{ weather.country }}</span>
+        <!-- Main Layout with Sidebar -->
+        <div class="main-layout">
+            <!-- Main Content Area -->
+            <main class="main-content">
+                <!-- Current Weather Card -->
+                <section class="current-weather glass-effect">
+                    <div class="location-header">
+                        <div class="location-info">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <div>
+                                <h1>{{ weather.city }}, {{ weather.country }}</h1>
+                                <p class="current-date" id="current-date"></p>
+                            </div>
+                        </div>
                     </div>
-                    <div class="current-date" id="current-date"></div>
                     
-                    <div class="main-temp-display">
-                        <div class="temp-value-3d">{{ weather.temp }}°C</div>
-                        <div class="weather-status">
-                            <div class="status-icon">
-                                <img src="http://openweathermap.org/img/wn/{{ weather.icon }}@4x.png" alt="weather" class="weather-3d-icon">
+                    <div class="weather-main">
+                        <div class="temp-display">
+                            <div class="temp-icon">
+                                <img src="http://openweathermap.org/img/wn/{{ weather.icon }}@4x.png" alt="weather">
                             </div>
-                            <div class="status-text">
-                                <h2>{{ weather.desc }}</h2>
-                                <p>Feels like {{ weather.feels }}°C</p>
+                            <div class="temp-info">
+                                <div class="temp-value">{{ weather.temp }}<span>°C</span></div>
+                                <div class="temp-desc">{{ weather.desc }}</div>
+                                <div class="feels-like">Feels like {{ weather.feels }}°C</div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="weather-stats-grid">
-                        <div class="stat-card glass-micro">
-                            <div class="stat-icon">
-                                <i class="fas fa-wind"></i>
-                            </div>
-                            <div class="stat-info">
-                                <span class="stat-label">Wind Speed</span>
-                                <span class="stat-value">{{ weather.wind }} km/h</span>
+                    <div class="weather-details">
+                        <div class="detail-item">
+                            <i class="fas fa-wind"></i>
+                            <div class="detail-info">
+                                <span class="detail-label">Wind</span>
+                                <span class="detail-value">{{ weather.wind }} km/h</span>
                             </div>
                         </div>
-                        <div class="stat-card glass-micro">
-                            <div class="stat-icon">
-                                <i class="fas fa-droplet"></i>
-                            </div>
-                            <div class="stat-info">
-                                <span class="stat-label">Humidity</span>
-                                <span class="stat-value">{{ weather.humidity }}%</span>
+                        <div class="detail-item">
+                            <i class="fas fa-droplet"></i>
+                            <div class="detail-info">
+                                <span class="detail-label">Humidity</span>
+                                <span class="detail-value">{{ weather.humidity }}%</span>
                             </div>
                         </div>
-                        <div class="stat-card glass-micro">
-                            <div class="stat-icon">
-                                <i class="fas fa-gauge-high"></i>
-                            </div>
-                            <div class="stat-info">
-                                <span class="stat-label">Pressure</span>
-                                <span class="stat-value">{{ weather.pressure }} hPa</span>
-                            </div>
-                        </div>
-                        <div class="stat-card glass-micro">
-                            <div class="stat-icon">
-                                <i class="fas fa-eye"></i>
-                            </div>
-                            <div class="stat-info">
-                                <span class="stat-label">Visibility</span>
-                                <span class="stat-value">Good</span>
+                        <div class="detail-item">
+                            <i class="fas fa-gauge"></i>
+                            <div class="detail-info">
+                                <span class="detail-label">Pressure</span>
+                                <span class="detail-value">{{ weather.pressure }} hPa</span>
                             </div>
                         </div>
                     </div>
-                </div>
-            </section>
+                </section>
 
-            <!-- Charts Section -->
-            <div class="charts-container">
-                <div class="chart-card glass-effect">
-                    <div class="chart-header">
-                        <h3><i class="fas fa-chart-line"></i> Temperature Forecast</h3>
-                        <div class="chart-legend">
-                            <span><i class="fas fa-circle" style="color: #667eea;"></i> Temperature</span>
-                        </div>
-                    </div>
-                    <canvas id="tempChart"></canvas>
-                </div>
-
-                <div class="chart-card glass-effect">
-                    <div class="chart-header">
-                        <h3><i class="fas fa-chart-area"></i> Weather Conditions</h3>
-                        <div class="chart-legend">
-                            <span><i class="fas fa-circle" style="color: #f093fb;"></i> Humidity</span>
-                            <span><i class="fas fa-circle" style="color: #4facfe;"></i> Wind</span>
-                        </div>
-                    </div>
-                    <canvas id="conditionsChart"></canvas>
-                </div>
-            </div>
-
-            <!-- Hourly & Weekly Grid -->
-            <div class="forecast-grid">
                 <!-- Hourly Forecast -->
-                <div class="hourly-section glass-effect">
-                    <h3 class="section-header">
-                        <i class="fas fa-clock"></i> Hourly Forecast
-                    </h3>
-                    <div class="hourly-container">
+                <section class="hourly-forecast glass-effect">
+                    <h2 class="section-title">
+                        <i class="fas fa-clock"></i>
+                        Hourly Forecast
+                    </h2>
+                    <div class="hourly-scroll">
                         {% for hour in hourly %}
-                        <div class="hour-item">
-                            <span class="hour-label">{{ hour.time }}</span>
-                            <div class="hour-icon-wrapper">
-                                <img src="http://openweathermap.org/img/wn/{{ hour.icon }}@2x.png" alt="weather">
-                            </div>
-                            <span class="hour-temp">{{ hour.temp }}°</span>
+                        <div class="hourly-item">
+                            <div class="hourly-time">{{ hour.time }}</div>
+                            <img src="http://openweathermap.org/img/wn/{{ hour.icon }}.png" alt="weather">
+                            <div class="hourly-temp">{{ hour.temp }}°</div>
                         </div>
                         {% endfor %}
                     </div>
-                </div>
+                </section>
 
-                <!-- Weekly Forecast -->
-                <div class="weekly-section glass-effect">
-                    <h3 class="section-header">
-                        <i class="fas fa-calendar-week"></i> 5-Day Forecast
+                <!-- Footer -->
+                <footer class="footer">
+                    <p>Made with <span class="heart">💗</span> by <a href="https://chhuparustam.com.np" target="_blank" rel="noopener noreferrer">chhuparustam</a></p>
+                </footer>
+            </main>
+
+            <!-- Sidebar -->
+            <aside class="sidebar">
+                <!-- 5-Day Forecast -->
+                <div class="sidebar-section glass-effect">
+                    <h3 class="sidebar-title">
+                        <i class="fas fa-calendar-week"></i>
+                        5-Day Forecast
                     </h3>
-                    <div class="weekly-container">
+                    <div class="forecast-list">
                         {% for day in weekly %}
-                        <div class="week-item">
-                            <div class="week-day">
+                        <div class="forecast-item">
+                            <div class="forecast-day">
                                 <span class="day-name">{{ day.day }}</span>
                                 <span class="day-date">{{ day.date }}</span>
                             </div>
-                            <div class="week-icon">
-                                <img src="http://openweathermap.org/img/wn/{{ day.icon }}@2x.png" alt="weather">
-                            </div>
-                            <div class="week-desc">{{ day.desc }}</div>
-                            <div class="week-temps">
-                                <span class="temp-high">{{ day.max_temp }}°</span>
-                                <div class="temp-bar">
-                                    <div class="temp-fill" style="width: 70%;"></div>
-                                </div>
-                                <span class="temp-low">{{ day.min_temp }}°</span>
+                            <img src="http://openweathermap.org/img/wn/{{ day.icon }}.png" alt="weather">
+                            <div class="forecast-temps">
+                                <span class="temp-max">{{ day.max_temp }}°</span>
+                                <span class="temp-min">{{ day.min_temp }}°</span>
                             </div>
                         </div>
                         {% endfor %}
                     </div>
                 </div>
-            </div>
 
-            <!-- Other Cities -->
-            <div class="cities-showcase glass-effect">
-                <h3 class="section-header">
-                    <i class="fas fa-globe"></i> Around the World
-                </h3>
-                <div class="cities-list">
-                    {% for city in other_cities %}
-                    <div class="city-item-3d">
-                        <div class="city-bg"></div>
-                        <div class="city-content">
-                            <img src="http://openweathermap.org/img/wn/{{ city.icon }}@2x.png" alt="weather" class="city-weather-icon">
-                            <div class="city-details">
-                                <h4>{{ city.name }}</h4>
-                                <p>{{ city.desc }}</p>
-                            </div>
-                            <div class="city-temp-large">{{ city.temp }}°</div>
-                        </div>
-                    </div>
-                    {% endfor %}
+                <!-- Charts -->
+                <div class="sidebar-section glass-effect">
+                    <h3 class="sidebar-title">
+                        <i class="fas fa-chart-line"></i>
+                        Temperature Chart
+                    </h3>
+                    <canvas id="tempChart"></canvas>
                 </div>
-            </div>
+
+                <div class="sidebar-section glass-effect">
+                    <h3 class="sidebar-title">
+                        <i class="fas fa-chart-area"></i>
+                        Conditions
+                    </h3>
+                    <canvas id="conditionsChart"></canvas>
+                </div>
+
+                <!-- Other Cities -->
+                <div class="sidebar-section glass-effect">
+                    <h3 class="sidebar-title">
+                        <i class="fas fa-globe"></i>
+                        Other Cities
+                    </h3>
+                    <div class="cities-grid">
+                        {% for city in other_cities %}
+                        <div class="city-card">
+                            <div class="city-name">{{ city.name }}</div>
+                            <img src="http://openweathermap.org/img/wn/{{ city.icon }}.png" alt="weather">
+                            <div class="city-temp">{{ city.temp }}°C</div>
+                            <div class="city-desc">{{ city.desc }}</div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </aside>
         </div>
         {% endif %}
     </div>
