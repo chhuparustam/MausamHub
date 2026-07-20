@@ -160,12 +160,3 @@ Made with 💗 by `chhuparustam`.
 UI assets: Font Awesome and Google Fonts. Weather icons provided by OpenWeatherMap.
 
 ---
-
-If you'd like, I can also:
-
-- Add a `requirements.txt` file
-- Commit and push the `README.md` for you
-- Add a sample `LICENSE` file (MIT)
-
-Let me know which of those you'd like me to do next.
-# MausamHub
